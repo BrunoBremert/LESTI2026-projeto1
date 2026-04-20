@@ -81,9 +81,12 @@ def salvar_eventos(eventos):
 if __name__ == "__main__":
     while True:
         print("\n1. Registrar Utilizador\n2. Login\n3. Cadastrar Evento (Organizador)\n4. Sair")
-        opcao = input("Escolha: ")
+        opcao = pedir_opcao()
         
-        if opcao == '1': registrar_usuario()
-        elif opcao == '2': fazer_login()
-        elif opcao == '3': cadastrar_evento()
-        elif opcao == '4': break
+        if opcao is None: 
+            continue
+            
+        if opcao == 1: registrar_usuario()
+        elif opcao == 2: fazer_login()
+        elif opcao == 3: cadastrar_evento()
+        elif opcao == 4: break
