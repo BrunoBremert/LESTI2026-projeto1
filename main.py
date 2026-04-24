@@ -142,33 +142,26 @@ def excluir_evento():
 def validar_bilhete():
     print("\n--- 🎫 Validação de Bilhetes (Área Staff) ---")
     eventos = carregar_eventos()
-    listar_eventos()
     
-    if not eventos:
-        return
-
-    nome_evento = input("\nNome do evento para check-in: ")
+    # Simulação de leitura de código alfanumérico
+    codigo = input("Escaneie o QR Code ou digite o código do bilhete: ")
+    
+    # Para o MVP, vamos assumir que o código contém o nome do evento
+    # Exemplo: O staff digita "Concerto Rock"
+    nome_evento = codigo 
+    
     if nome_evento in eventos:
         evento = eventos[nome_evento]
-        
-        # Verifica se ainda há pessoas que compraram mas não entraram
         if evento['check_ins'] < evento['vendidos']:
-            print(f"Evento: {nome_evento}")
-            print(f"Estado: {evento['check_ins']} entradas de {evento['vendidos']} bilhetes vendidos.")
-            
-            confirmar = input("Confirmar entrada de +1 participante? (s/n): ")
-            if confirmar.lower() == 's':
-                # ATUALIZAÇÃO REAL DOS DADOS
-                eventos[nome_evento]['check_ins'] += 1
-                salvar_eventos(eventos)
-                
-                print(f"✅ Acesso AUTORIZADO! Check-in realizado com sucesso.")
-            else:
-                print("Operação cancelada.")
+            eventos[nome_evento]['check_ins'] += 1
+            salvar_eventos(eventos)
+            # Usando ANSI colors para o "Verde" (opcional, mas fica giro)
+            print("\033[92m✅ APROVADO: Bilhete validado com sucesso!\033[0m")
         else:
-            print("⚠️ Alerta: Todos os bilhetes vendidos para este evento já fizeram check-in!")
+            # Cor vermelha para erro
+            print("\033[91m❌ ERRO: Bilhete já utilizado ou duplicado!\033[0m")
     else:
-        print("❌ Erro: Evento não encontrado.")
+        print("❌ ERRO: Código/Evento inválido.")
 
 # --- MENU ATUALIZADO ---
 
