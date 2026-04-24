@@ -60,7 +60,8 @@ def cadastrar_evento():
             "data": data,
             "preco": preco,
             "total_bilhetes": quantidade,
-            "vendidos": 0
+            "vendidos": 0,
+            "check_ins": 0  
         }
         
         salvar_eventos(eventos)
@@ -138,7 +139,38 @@ def excluir_evento():
     else:
         print("❌ Evento não encontrado.")
 
-# ==========================================
+def validar_bilhete():
+    print("\n--- 🎫 Validação de Bilhetes (Área Staff) ---")
+    eventos = carregar_eventos()
+    listar_eventos()
+    
+    if not eventos:
+        return
+
+    nome_evento = input("\nNome do evento para check-in: ")
+    if nome_evento in eventos:
+        evento = eventos[nome_evento]
+        
+        # Verifica se ainda há pessoas que compraram mas não entraram
+        if evento['check_ins'] < evento['vendidos']:
+            print(f"Evento: {nome_evento}")
+            print(f"Estado: {evento['check_ins']} entradas de {evento['vendidos']} bilhetes vendidos.")
+            
+            confirmar = input("Confirmar entrada de +1 participante? (s/n): ")
+            if confirmar.lower() == 's':
+                # ATUALIZAÇÃO REAL DOS DADOS
+                eventos[nome_evento]['check_ins'] += 1
+                salvar_eventos(eventos)
+                
+                print(f"✅ Acesso AUTORIZADO! Check-in realizado com sucesso.")
+            else:
+                print("Operação cancelada.")
+        else:
+            print("⚠️ Alerta: Todos os bilhetes vendidos para este evento já fizeram check-in!")
+    else:
+        print("❌ Erro: Evento não encontrado.")
+
+# --- MENU ATUALIZADO ---
 
 if __name__ == "__main__":
     while True:
@@ -151,7 +183,8 @@ if __name__ == "__main__":
         print("4. Listar Eventos (Read)")
         print("5. Editar Evento (Update)")
         print("6. Excluir Evento (Delete)")
-        print("7. Sair")
+        print("7. Validar Bilhete (Staff/Check-in)") # Nova Opção
+        print("8. Sair")
         
         opcao = pedir_opcao()
         
@@ -164,7 +197,8 @@ if __name__ == "__main__":
         elif opcao == 4: listar_eventos()
         elif opcao == 5: editar_evento()
         elif opcao == 6: excluir_evento()
-        elif opcao == 7: 
+        elif opcao == 7: validar_bilhete() # Chamada da tua função
+        elif opcao == 8: 
             print("Encerrando o sistema...")
             break
         else:
