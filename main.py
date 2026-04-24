@@ -15,6 +15,7 @@ def pedir_opcao():
 def carregar_usuarios():
     if not os.path.exists(FILE_PATH):
         return {}
+    # Mantemos a versão com encoding que o Dominik sugeriu
     with open(FILE_PATH, 'r', encoding='utf-8') as f:
         return json.load(f)
 
@@ -78,9 +79,8 @@ def salvar_eventos(eventos):
     with open(EVENTOS_FILE, 'w', encoding='utf-8') as f:
         json.dump(eventos, f, indent=4)
 
-
 # ==========================================
-# --- DOMINIK (CRUD) ---
+# --- FUNÇÕES DO DOMINIK (CRUD) ---
 # ==========================================
 
 def listar_eventos():
@@ -139,7 +139,6 @@ def excluir_evento():
         print("❌ Evento não encontrado.")
 
 # ==========================================
-
 
 if __name__ == "__main__":
     while True:
