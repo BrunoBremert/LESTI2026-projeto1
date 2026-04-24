@@ -15,7 +15,6 @@ def pedir_opcao():
 def carregar_usuarios():
     if not os.path.exists(FILE_PATH):
         return {}
-    # Mantemos a versão com encoding que o Dominik sugeriu
     with open(FILE_PATH, 'r', encoding='utf-8') as f:
         return json.load(f)
 
@@ -143,11 +142,8 @@ def validar_bilhete():
     print("\n--- 🎫 Validação de Bilhetes (Área Staff) ---")
     eventos = carregar_eventos()
     
-    # Simulação de leitura de código alfanumérico
     codigo = input("Escaneie o QR Code ou digite o código do bilhete: ")
     
-    # Para o MVP, vamos assumir que o código contém o nome do evento
-    # Exemplo: O staff digita "Concerto Rock"
     nome_evento = codigo 
     
     if nome_evento in eventos:
@@ -155,15 +151,11 @@ def validar_bilhete():
         if evento['check_ins'] < evento['vendidos']:
             eventos[nome_evento]['check_ins'] += 1
             salvar_eventos(eventos)
-            # Usando ANSI colors para o "Verde" (opcional, mas fica giro)
             print("\033[92m✅ APROVADO: Bilhete validado com sucesso!\033[0m")
         else:
-            # Cor vermelha para erro
             print("\033[91m❌ ERRO: Bilhete já utilizado ou duplicado!\033[0m")
     else:
         print("❌ ERRO: Código/Evento inválido.")
-
-# --- MENU ATUALIZADO ---
 
 if __name__ == "__main__":
     while True:
@@ -176,7 +168,7 @@ if __name__ == "__main__":
         print("4. Listar Eventos (Read)")
         print("5. Editar Evento (Update)")
         print("6. Excluir Evento (Delete)")
-        print("7. Validar Bilhete (Staff/Check-in)") # Nova Opção
+        print("7. Validar Bilhete (Staff/Check-in)") 
         print("8. Sair")
         
         opcao = pedir_opcao()
@@ -190,7 +182,7 @@ if __name__ == "__main__":
         elif opcao == 4: listar_eventos()
         elif opcao == 5: editar_evento()
         elif opcao == 6: excluir_evento()
-        elif opcao == 7: validar_bilhete() # Chamada da tua função
+        elif opcao == 7: validar_bilhete() 
         elif opcao == 8: 
             print("Encerrando o sistema...")
             break
