@@ -15,11 +15,11 @@ def pedir_opcao():
 def carregar_usuarios():
     if not os.path.exists(FILE_PATH):
         return {}
-    with open(FILE_PATH, 'r') as f:
+    with open(FILE_PATH, 'r', encoding='utf-8') as f:
         return json.load(f)
 
 def salvar_usuarios(usuarios):
-    with open(FILE_PATH, 'w') as f:
+    with open(FILE_PATH, 'w', encoding='utf-8') as f:
         json.dump(usuarios, f, indent=4)
 
 def registrar_usuario():
@@ -71,16 +71,89 @@ def cadastrar_evento():
 def carregar_eventos():
     if not os.path.exists(EVENTOS_FILE):
         return {}
-    with open(EVENTOS_FILE, 'r') as f:
+    with open(EVENTOS_FILE, 'r', encoding='utf-8') as f:
         return json.load(f)
 
 def salvar_eventos(eventos):
-    with open(EVENTOS_FILE, 'w') as f:
+    with open(EVENTOS_FILE, 'w', encoding='utf-8') as f:
         json.dump(eventos, f, indent=4)
+
+
+# ==========================================
+# --- DOMINIK (CRUD) ---
+# ==========================================
+
+def listar_eventos():
+    print("\n--- Lista de Eventos Cadastrados ---")
+    eventos = carregar_eventos()
+    if not eventos:
+        print("Nenhum evento cadastrado no momento.")
+        return
+    
+    for nome, info in eventos.items():
+        vagas = info['total_bilhetes'] - info['vendidos']
+        print(f"- {nome} | Data: {info['data']} | Preço: {info['preco']}€ | Vagas: {vagas}")
+
+def editar_evento():
+    print("\n--- Atualizar Evento ---")
+    eventos = carregar_eventos()
+    listar_eventos()
+    
+    if not eventos:
+        return
+
+    nome = input("\nDigite o nome do evento que deseja editar: ")
+    if nome in eventos:
+        print("Dica: Deixe em branco e pressione Enter para manter o valor atual.")
+        nova_data = input(f"Nova data ({eventos[nome]['data']}): ") or eventos[nome]['data']
+        
+        try:
+            novo_preco_str = input(f"Novo preço ({eventos[nome]['preco']}€): ")
+            novo_preco = float(novo_preco_str) if novo_preco_str else eventos[nome]['preco']
+            
+            eventos[nome]['data'] = nova_data
+            eventos[nome]['preco'] = novo_preco
+            salvar_eventos(eventos)
+            print("✅ Evento atualizado com sucesso!")
+        except ValueError:
+            print("❌ Erro: O preço deve ser um número!")
+    else:
+        print("❌ Evento não encontrado.")
+
+def excluir_evento():
+    print("\n--- Excluir Evento ---")
+    eventos = carregar_eventos()
+    listar_eventos()
+    
+    if not eventos:
+        return
+
+    nome = input("\nDigite o nome do evento que deseja apagar: ")
+    if nome in eventos:
+        confirmar = input(f"Tem certeza que deseja excluir '{nome}'? (s/n): ")
+        if confirmar.lower() == 's':
+            del eventos[nome]
+            salvar_eventos(eventos)
+            print("✅ Evento excluído permanentemente!")
+    else:
+        print("❌ Evento não encontrado.")
+
+# ==========================================
+
 
 if __name__ == "__main__":
     while True:
-        print("\n1. Registrar Utilizador\n2. Login\n3. Cadastrar Evento (Organizador)\n4. Sair")
+        print("\n" + "="*30)
+        print("🎫 SISTEMA DE BILHETERIA")
+        print("="*30)
+        print("1. Registrar Utilizador")
+        print("2. Login")
+        print("3. Cadastrar Evento (Create)")
+        print("4. Listar Eventos (Read)")
+        print("5. Editar Evento (Update)")
+        print("6. Excluir Evento (Delete)")
+        print("7. Sair")
+        
         opcao = pedir_opcao()
         
         if opcao is None: 
@@ -89,4 +162,11 @@ if __name__ == "__main__":
         if opcao == 1: registrar_usuario()
         elif opcao == 2: fazer_login()
         elif opcao == 3: cadastrar_evento()
-        elif opcao == 4: break
+        elif opcao == 4: listar_eventos()
+        elif opcao == 5: editar_evento()
+        elif opcao == 6: excluir_evento()
+        elif opcao == 7: 
+            print("Encerrando o sistema...")
+            break
+        else:
+            print("Opção inválida!")
