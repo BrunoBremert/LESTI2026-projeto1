@@ -138,6 +138,34 @@ def excluir_evento():
     else:
         print("❌ Evento não encontrado.")
 
+def comprar_bilhete():
+    print("\n--- 🛒 Comprar Bilhete (Área Cliente) ---")
+    eventos = carregar_eventos()
+    listar_eventos()
+    
+    if not eventos:
+        return
+
+    nome_evento = input("\nDigite o nome do evento para o qual deseja comprar bilhete: ")
+    if nome_evento in eventos:
+        evento = eventos[nome_evento]
+        vagas = evento['total_bilhetes'] - evento['vendidos']
+        
+        if vagas > 0:
+            confirmar = input(f"O bilhete para '{nome_evento}' custa {evento['preco']}€. Deseja confirmar a compra? (s/n): ")
+            if confirmar.lower() == 's':
+                eventos[nome_evento]['vendidos'] += 1
+                salvar_eventos(eventos)
+                # Zgodnie z kodem Bruna, nazwa eventu jest tymczasowym kodem biletu
+                print(f"\033[92m✅ Compra realizada com sucesso!\033[0m")
+                print(f"🎫 O seu código de entrada (QR Code) é: {nome_evento}")
+            else:
+                print("Compra cancelada.")
+        else:
+            print("\033[91m❌ Desculpe, os bilhetes para este evento estão esgotados!\033[0m")
+    else:
+        print("❌ Evento não encontrado.")
+
 def validar_bilhete():
     print("\n--- 🎫 Validação de Bilhetes (Área Staff) ---")
     eventos = carregar_eventos()
@@ -164,12 +192,13 @@ if __name__ == "__main__":
         print("="*30)
         print("1. Registrar Utilizador")
         print("2. Login")
-        print("3. Cadastrar Evento (Create)")
+        print("3. Cadastrar Evento (Organizador/Create)")
         print("4. Listar Eventos (Read)")
-        print("5. Editar Evento (Update)")
-        print("6. Excluir Evento (Delete)")
-        print("7. Validar Bilhete (Staff/Check-in)") 
-        print("8. Sair")
+        print("5. Editar Evento (Organizador/Update)")
+        print("6. Excluir Evento (Organizador/Delete)")
+        print("7. Comprar Bilhete (Cliente)")
+        print("8. Validar Bilhete (Staff/Check-in)") 
+        print("9. Sair")
         
         opcao = pedir_opcao()
         
@@ -182,8 +211,9 @@ if __name__ == "__main__":
         elif opcao == 4: listar_eventos()
         elif opcao == 5: editar_evento()
         elif opcao == 6: excluir_evento()
-        elif opcao == 7: validar_bilhete() 
-        elif opcao == 8: 
+        elif opcao == 7: comprar_bilhete()
+        elif opcao == 8: validar_bilhete() 
+        elif opcao == 9: 
             print("Encerrando o sistema...")
             break
         else:
