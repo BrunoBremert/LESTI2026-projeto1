@@ -12,5 +12,12 @@
         "total_bilhetes": 30,
         "vendidos": 30,
         "check_ins": 0
+    },
+    "Test 2026": {
+        "data": "25/04/2026",
+        "preco": 10.0,
+        "total_bilhetes": 50,
+        "vendidos": 1,
+        "check_ins": 0
     }
 }
