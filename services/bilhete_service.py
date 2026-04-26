@@ -75,26 +75,37 @@ class BilheteService:
         max_vendidos = -1
 
         for nome, info in eventos.items():
-            receita_evento = info["vendidos"] * info["preco"]
+            vendidos = info["vendidos"]
+            preco = info["preco"]
+            total_bilhetes = info["total_bilhetes"]
+            check_ins = info["check_ins"]
 
+            receita_evento = vendidos * preco
             total_receita += receita_evento
-            total_bilhetes_vendidos += info["vendidos"]
+            total_bilhetes_vendidos += vendidos
 
-            if info["vendidos"] > max_vendidos:
-                max_vendidos = info["vendidos"]
-                evento_mais_popular = nome
-
-            ocupacao = (
-                info["check_ins"] / info["vendidos"] * 100
-                if info["vendidos"] > 0
+            lotacao = (
+                vendidos / total_bilhetes * 100
+                if total_bilhetes > 0
                 else 0
             )
 
-            print(f"📍 {nome}:")
-            print(f"   - Receita: {receita_evento:.2f}€")
-            print(f"   - Check-ins: {info['check_ins']} de {info['vendidos']} ({ocupacao:.1f}%)")
+            ocupacao = (
+                check_ins / vendidos * 100
+                if vendidos > 0
+                else 0
+            )
 
-        print("=" * 40)
+            if vendidos > max_vendidos:
+                max_vendidos = vendidos
+                evento_mais_popular = nome
+
+            print(f"\n📍 {nome}:")
+            print(f"   - Receita: {receita_evento:.2f}€")
+            print(f"   - Lotação: {lotacao:.1f}% ({vendidos} de {total_bilhetes})")
+            print(f"   - Check-ins: {check_ins} de {vendidos} ({ocupacao:.1f}%)")
+
+        print("\n" + "=" * 40)
         print(f"💰 RECEITA TOTAL: {total_receita:.2f}€")
         print(f"🎟️ TOTAL DE BILHETES: {total_bilhetes_vendidos}")
         print(f"🌟 EVENTO MAIS POPULAR: {evento_mais_popular}")
