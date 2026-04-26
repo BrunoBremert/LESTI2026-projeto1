@@ -1,23 +1,51 @@
 {
     "Concerto Rock": {
         "data": "20/05/2026",
-        "preco": 25.0,
-        "total_bilhetes": 100,
-        "vendidos": 15,
+        "setores": {
+            "Geral": {
+                "preco": 25.0,
+                "capacidade": 100,
+                "vendidos": 15
+            }
+        },
         "check_ins": 2
     },
     "Workshop Python": {
         "data": "15/06/2026",
-        "preco": 0.0,
-        "total_bilhetes": 30,
-        "vendidos": 30,
+        "setores": {
+            "Geral": {
+                "preco": 0.0,
+                "capacidade": 30,
+                "vendidos": 30
+            }
+        },
         "check_ins": 0
     },
     "Test 2026": {
         "data": "25/04/2026",
-        "preco": 10.0,
-        "total_bilhetes": 50,
-        "vendidos": 1,
+        "setores": {
+            "Geral": {
+                "preco": 10.0,
+                "capacidade": 50,
+                "vendidos": 1
+            }
+        },
+        "check_ins": 0
+    },
+    "Festiwal 2026": {
+        "data": "10/08/2026",
+        "setores": {
+            "VIP": {
+                "preco": 100.0,
+                "capacidade": 10,
+                "vendidos": 1
+            },
+            "Plyta": {
+                "preco": 30.0,
+                "capacidade": 100,
+                "vendidos": 0
+            }
+        },
         "check_ins": 0
     }
 }

@@ -5,28 +5,39 @@ FILE_PATH = "usuarios.json"
 EVENTOS_FILE = "eventos.json"
 
 # ==========================================
-# --- CLASSES (OOP - Card 7) ---
+# --- CLASSES (OOP - Card 7 & Card 17) ---
 # ==========================================
 
 class Evento:
-    def __init__(self, nome, data, preco, total_bilhetes, vendidos=0, check_ins=0):
+    def __init__(self, nome, data, preco=None, total_bilhetes=None, vendidos=0, check_ins=0, setores=None):
         self.nome = nome
         self.data = data
-        self.preco = float(preco)
-        self.total_bilhetes = int(total_bilhetes)
-        self.vendidos = int(vendidos)
         self.check_ins = int(check_ins)
+        
+        # Lógica de migração: se o evento é antigo (não tem setores), criamos um setor "Geral" padrão
+        if setores is not None:
+            self.setores = setores
+        else:
+            self.setores = {
+                "Geral": {
+                    "preco": float(preco) if preco else 0.0,
+                    "capacidade": int(total_bilhetes) if total_bilhetes else 0,
+                    "vendidos": int(vendidos) if vendidos else 0
+                }
+            }
 
     @property
-    def vagas(self):
-        return self.total_bilhetes - self.vendidos
+    def total_bilhetes(self):
+        return sum(s["capacidade"] for s in self.setores.values())
+
+    @property
+    def vendidos(self):
+        return sum(s["vendidos"] for s in self.setores.values())
 
     def to_dict(self):
         return {
             "data": self.data,
-            "preco": self.preco,
-            "total_bilhetes": self.total_bilhetes,
-            "vendidos": self.vendidos,
+            "setores": self.setores,
             "check_ins": self.check_ins
         }
 
@@ -52,11 +63,9 @@ class SistemaBilheteria:
             return {}
         with open(EVENTOS_FILE, 'r', encoding='utf-8') as f:
             dados = json.load(f)
-            # Converte os dicionários do JSON em Objetos da Classe Evento
             return {nome: Evento(nome, **info) for nome, info in dados.items()}
 
     def salvar_eventos(self):
-        # Converte os Objetos de volta para dicionários antes de salvar no JSON
         dados = {nome: evento.to_dict() for nome, evento in self.eventos.items()}
         with open(EVENTOS_FILE, 'w', encoding='utf-8') as f:
             json.dump(dados, f, indent=4)
@@ -84,20 +93,34 @@ class SistemaBilheteria:
 
     # --- Módulo Organizador (CRUD) ---
     def cadastrar_evento(self):
-        print("\n--- Cadastro de Novo Evento ---")
+        print("\n--- Cadastro de Novo Evento (Com Setores) ---")
         nome = input("Nome do Evento: ")
         data = input("Data (DD/MM/AAAA): ")
-        try:
-            preco = float(input("Preço do Bilhete (€): "))
-            quantidade = int(input("Quantidade de Bilhetes disponíveis: "))
-            
-            # Instanciando um novo objeto Evento
-            novo_evento = Evento(nome, data, preco, quantidade)
-            self.eventos[nome] = novo_evento
-            self.salvar_eventos()
-            print(f"Evento '{nome}' cadastrado com sucesso!")
-        except ValueError:
-            print("Erro: Preço e Quantidade devem ser números!")
+        
+        setores = {}
+        print("\nAdicione os setores do evento (ex: VIP, Plateia). Digite 'fim' no nome para terminar.")
+        while True:
+            nome_setor = input("\nNome do Setor (ou 'fim'): ")
+            if nome_setor.lower() == 'fim':
+                if not setores:
+                    print("Erro: O evento precisa ter pelo menos um setor!")
+                    continue
+                break
+            try:
+                preco = float(input(f"Preço do bilhete para '{nome_setor}' (€): "))
+                capacidade = int(input(f"Capacidade de lugares para '{nome_setor}': "))
+                setores[nome_setor] = {
+                    "preco": preco,
+                    "capacidade": capacidade,
+                    "vendidos": 0
+                }
+            except ValueError:
+                print("Erro: Preço e Capacidade devem ser números!")
+                
+        novo_evento = Evento(nome, data, setores=setores)
+        self.eventos[nome] = novo_evento
+        self.salvar_eventos()
+        print(f"\n✅ Evento '{nome}' cadastrado com sucesso com {len(setores)} setor(es)!")
 
     def listar_eventos(self):
         print("\n--- Lista de Eventos Cadastrados ---")
@@ -106,7 +129,10 @@ class SistemaBilheteria:
             return False
         
         for nome, evento in self.eventos.items():
-            print(f"- {evento.nome} | Data: {evento.data} | Preço: {evento.preco}€ | Vagas: {evento.vagas}")
+            print(f"\n📍 {evento.nome} | Data: {evento.data} | Lotação Total: {evento.vendidos}/{evento.total_bilhetes}")
+            for nome_setor, info in evento.setores.items():
+                vagas = info['capacidade'] - info['vendidos']
+                print(f"   - Setor {nome_setor}: {info['preco']}€ | Vagas: {vagas}")
         return True
 
     def editar_evento(self):
@@ -114,19 +140,12 @@ class SistemaBilheteria:
         if not self.listar_eventos():
             return
 
-        nome = input("\nDigite o nome do evento que deseja editar: ")
+        nome = input("\nDigite o nome do evento que deseja editar a data: ")
         if nome in self.eventos:
             evento = self.eventos[nome]
-            print("Dica: Deixe em branco e pressione Enter para manter o valor atual.")
             evento.data = input(f"Nova data ({evento.data}): ") or evento.data
-            
-            try:
-                novo_preco_str = input(f"Novo preço ({evento.preco}€): ")
-                evento.preco = float(novo_preco_str) if novo_preco_str else evento.preco
-                self.salvar_eventos()
-                print("✅ Evento atualizado com sucesso!")
-            except ValueError:
-                print("❌ Erro: O preço deve ser um número!")
+            self.salvar_eventos()
+            print("✅ Data do evento atualizada com sucesso! (Para editar setores, exclua e recrie o evento)")
         else:
             print("❌ Evento não encontrado.")
 
@@ -151,30 +170,41 @@ class SistemaBilheteria:
         if not self.listar_eventos():
             return
 
-        nome_evento = input("\nDigite o nome do evento para o qual deseja comprar bilhete: ")
+        nome_evento = input("\nDigite o nome do evento: ")
         if nome_evento in self.eventos:
             evento = self.eventos[nome_evento]
-            if evento.vagas > 0:
-                confirmar = input(f"O bilhete para '{evento.nome}' custa {evento.preco}€. Deseja confirmar a compra? (s/n): ")
-                if confirmar.lower() == 's':
-                    evento.vendidos += 1
-                    self.salvar_eventos()
-                    print(f"\033[92m✅ Compra realizada com sucesso!\033[0m")
-                    print(f"🎫 O seu código de entrada (QR Code) é: {evento.nome}")
+            nome_setor = input("Digite o nome do setor que deseja comprar: ")
+            
+            if nome_setor in evento.setores:
+                setor = evento.setores[nome_setor]
+                vagas = setor['capacidade'] - setor['vendidos']
+                
+                if vagas > 0:
+                    confirmar = input(f"O bilhete '{nome_setor}' custa {setor['preco']}€. Confirmar compra? (s/n): ")
+                    if confirmar.lower() == 's':
+                        setor['vendidos'] += 1
+                        self.salvar_eventos()
+                        print(f"\033[92m✅ Compra realizada com sucesso!\033[0m")
+                        print(f"🎫 O seu código de entrada (QR Code) é: {evento.nome}-{nome_setor}")
+                    else:
+                        print("Compra cancelada.")
                 else:
-                    print("Compra cancelada.")
+                    print("\033[91m❌ Desculpe, este setor está esgotado!\033[0m")
             else:
-                print("\033[91m❌ Desculpe, os bilhetes para este evento estão esgotados!\033[0m")
+                print("❌ Setor não encontrado.")
         else:
             print("❌ Evento não encontrado.")
 
     # --- Módulo Staff ---
     def validar_bilhete(self):
         print("\n--- 🎫 Validação de Bilhetes (Área Staff) ---")
-        codigo = input("Escaneie o QR Code ou digite o código do bilhete: ")
+        codigo = input("Escaneie o QR Code (ex: NomeEvento-Setor) ou digite apenas o nome do evento: ")
         
-        if codigo in self.eventos:
-            evento = self.eventos[codigo]
+        # Pega apenas a primeira parte do código se tiver um traço (NomeEvento-Setor -> NomeEvento)
+        nome_evento = codigo.split('-')[0]
+        
+        if nome_evento in self.eventos:
+            evento = self.eventos[nome_evento]
             if evento.check_ins < evento.vendidos:
                 evento.check_ins += 1
                 self.salvar_eventos()
@@ -196,28 +226,21 @@ class SistemaBilheteria:
 
         total_receita = 0
         total_bilhetes_vendidos = 0
-        evento_mais_popular = None
-        max_vendidos = -1
 
         for nome, evento in self.eventos.items():
-            receita_evento = evento.vendidos * evento.preco
+            receita_evento = sum(s['vendidos'] * s['preco'] for s in evento.setores.values())
             total_receita += receita_evento
             total_bilhetes_vendidos += evento.vendidos
-            
-            if evento.vendidos > max_vendidos:
-                max_vendidos = evento.vendidos
-                evento_mais_popular = nome
             
             ocupacao = (evento.check_ins / evento.vendidos * 100) if evento.vendidos > 0 else 0
             
             print(f"📍 {nome}:")
-            print(f"   - Receita: {receita_evento:.2f}€")
-            print(f"   - Check-ins: {evento.check_ins} de {evento.vendidos} ({ocupacao:.1f}%)")
+            print(f"   - Receita gerada: {receita_evento:.2f}€")
+            print(f"   - Check-ins na porta: {evento.check_ins} de {evento.vendidos} vendidos ({ocupacao:.1f}%)")
 
         print("="*40)
-        print(f"💰 RECEITA TOTAL: {total_receita:.2f}€")
-        print(f"🎟️ TOTAL DE BILHETES: {total_bilhetes_vendidos}")
-        print(f"🌟 EVENTO MAIS POPULAR: {evento_mais_popular}")
+        print(f"💰 RECEITA GLOBAL: {total_receita:.2f}€")
+        print(f"🎟️ TOTAL DE BILHETES VENDIDOS: {total_bilhetes_vendidos}")
         print("="*40)
 
     # --- Menu Principal ---
@@ -228,13 +251,13 @@ class SistemaBilheteria:
             print("="*30)
             print("1. Registrar Utilizador")
             print("2. Login")
-            print("3. Cadastrar Evento (Organizador/Create)")
-            print("4. Listar Eventos (Read)")
-            print("5. Editar Evento (Organizador/Update)")
-            print("6. Excluir Evento (Organizador/Delete)")
-            print("7. Comprar Bilhete (Cliente)")
-            print("8. Validar Bilhete (Staff/Check-in)") 
-            print("9. Dashboard de Vendas (Organizador)")
+            print("3. Cadastrar Evento (Com Setores)")
+            print("4. Listar Eventos")
+            print("5. Editar Evento (Apenas Data)")
+            print("6. Excluir Evento")
+            print("7. Comprar Bilhete")
+            print("8. Validar Bilhete (Staff)") 
+            print("9. Dashboard de Vendas")
             print("10. Sair")
             
             try:
