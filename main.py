@@ -33,8 +33,8 @@ class SistemaBilheteria:
         print("6. Excluir Evento (Organizador/Delete)")
         print("7. Comprar Bilhete (Cliente)")
         print("8. Validar Bilhete (Staff/Check-in)")
-        print("9. Dashboard")
-        print("10. Sair")
+        print("10. Checklist de Logística")
+        print("11. Sair")
 
     def executar(self):
         while True:
@@ -64,6 +64,8 @@ class SistemaBilheteria:
             elif opcao == 9:
                 self.bilhete_service.exibir_dashboard()
             elif opcao == 10:
+                self.evento_service.checklist_logistica()
+            elif opcao == 11:
                 print("Encerrando o sistema...")
                 break
             else:

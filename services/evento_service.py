@@ -18,7 +18,13 @@ class EventoService:
                 "preco": preco,
                 "total_bilhetes": quantidade,
                 "vendidos": 0,
-                "check_ins": 0
+                "check_ins": 0,
+                "checklist": {
+                    "som": False,
+                    "luzes": False,
+                    "seguranca": False,
+                    "limpeza": False
+                }
             }
 
             self.storage.salvar(eventos)
@@ -90,3 +96,66 @@ class EventoService:
                 print("✅ Evento excluído permanentemente!")
         else:
             print("❌ Evento não encontrado.")
+
+    def checklist_logistica(self):
+        print("\n--- Checklist de Logística (Staff) ---")
+        eventos = self.storage.carregar()
+
+        self.listar_eventos()
+
+        if not eventos:
+            return
+
+        nome = input("\nDigite o nome do evento: ")
+
+        if nome not in eventos:
+            print("❌ Evento não encontrado.")
+            return
+
+        if "checklist" not in eventos[nome]:
+            eventos[nome]["checklist"] = {
+                "som": False,
+                "luzes": False,
+                "seguranca": False,
+                "limpeza": False
+            }
+            self.storage.salvar(eventos)
+
+        while True:
+            print(f"\n📋 Checklist do evento: {nome}")
+
+            for tarefa, concluida in eventos[nome]["checklist"].items():
+                status = "✅ Feita" if concluida else "❌ Não feita"
+                print(f"- {tarefa}: {status}")
+
+            print("\n1. Marcar tarefa como feita/não feita")
+            print("2. Adicionar nova tarefa")
+            print("3. Voltar")
+
+            opcao = input("Escolha uma opção: ")
+
+            if opcao == "1":
+                tarefa = input("Digite o nome da tarefa: ")
+
+                if tarefa in eventos[nome]["checklist"]:
+                    eventos[nome]["checklist"][tarefa] = not eventos[nome]["checklist"][tarefa]
+                    self.storage.salvar(eventos)
+                    print("✅ Estado da tarefa atualizado!")
+                else:
+                    print("❌ Tarefa não encontrada.")
+
+            elif opcao == "2":
+                nova_tarefa = input("Digite o nome da nova tarefa: ")
+
+                if nova_tarefa in eventos[nome]["checklist"]:
+                    print("❌ Essa tarefa já existe.")
+                else:
+                    eventos[nome]["checklist"][nova_tarefa] = False
+                    self.storage.salvar(eventos)
+                    print("✅ Nova tarefa adicionada!")
+
+            elif opcao == "3":
+                break
+
+            else:
+                print("Opção inválida!")
