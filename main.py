@@ -1,5 +1,7 @@
-import json
-import os
+from storage.json_storage import JsonStorage
+from services.usuario_service import UsuarioService
+from services.evento_service import EventoService
+from services.bilhete_service import BilheteService
 
 FILE_PATH = "usuarios.json"
 EVENTOS_FILE = "eventos.json"

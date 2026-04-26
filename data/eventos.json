@@ -1,0 +1,15 @@
+{
+    "Programao Web": {
+        "data": "30/05/2026",
+        "preco": 26.0,
+        "total_bilhetes": 2,
+        "vendidos": 1,
+        "check_ins": 0,
+        "checklist": {
+            "som": false,
+            "luzes": false,
+            "seguranca": false,
+            "limpeza": false
+        }
+    }
+}
