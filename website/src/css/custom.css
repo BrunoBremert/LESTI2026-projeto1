@@ -1,0 +1,61 @@
+:root {
+  --ifm-color-primary: #13795f;
+  --ifm-color-primary-dark: #116d56;
+  --ifm-color-primary-darker: #106750;
+  --ifm-color-primary-darkest: #0d5542;
+  --ifm-color-primary-light: #158568;
+  --ifm-color-primary-lighter: #168b6e;
+  --ifm-color-primary-lightest: #1a9d7d;
+  --ifm-code-font-size: 95%;
+  --ifm-heading-font-weight: 800;
+  --ifm-navbar-height: 64px;
+}
+
+[data-theme='dark'] {
+  --ifm-color-primary: #38d2b3;
+  --ifm-color-primary-dark: #2bc9a9;
+  --ifm-color-primary-darker: #29bea0;
+  --ifm-color-primary-darkest: #219d84;
+  --ifm-color-primary-light: #4bd7bc;
+  --ifm-color-primary-lighter: #56dac1;
+  --ifm-color-primary-lightest: #78e2cd;
+  --ifm-background-color: #10191f;
+  --ifm-background-surface-color: #15242c;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  color: #172126;
+}
+
+.navbar {
+  box-shadow: 0 1px 0 rgba(16, 31, 36, 0.08);
+}
+
+.button {
+  border-radius: 8px;
+  font-weight: 800;
+}
+
+.button--secondary {
+  background: #fff;
+  border-color: #fff;
+  color: #12222a;
+}
+
+.button--secondary:hover {
+  background: #ecf7f4;
+  color: #12222a;
+}
+
+.footer {
+  background: #10191f;
+}
+
+.theme-doc-markdown table {
+  display: table;
+  width: 100%;
+}
