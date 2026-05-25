@@ -1,0 +1,36 @@
+# EventFlow
+
+Sistema de bilheteira para eventos, desenvolvido no contexto do projeto LESTI
+2026. A aplicacao permite gerir eventos, vender bilhetes, validar entradas e
+consultar indicadores de vendas/ocupacao.
+
+## Executar a aplicacao
+
+```bash
+python main.py
+```
+
+## Site Docusaurus
+
+O site de divulgacao do TP3 esta na pasta `website`.
+
+```bash
+cd website
+npm install
+npm run start
+```
+
+Para validar a versao estatica:
+
+```bash
+npm run build
+```
+
+## Evidencias Git
+
+O repositorio contem ramos de funcionalidades, merges e historico de commits.
+O site inclui uma pagina propria com sugestoes de workflow para a entrega:
+
+```text
+website/docs/git-workflow.md
+```
