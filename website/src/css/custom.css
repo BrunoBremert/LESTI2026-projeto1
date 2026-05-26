@@ -23,8 +23,19 @@
   --ifm-background-surface-color: #15242c;
 }
 
-html[data-theme='dark'] {
-  --ifm-font-color-base: #f5f5f5;
+html[data-theme='dark'],
+[data-theme='dark'] body,
+[data-theme='dark'] p,
+[data-theme='dark'] h1,
+[data-theme='dark'] h2,
+[data-theme='dark'] h3,
+[data-theme='dark'] h4,
+[data-theme='dark'] h5,
+[data-theme='dark'] h6,
+[data-theme='dark'] li,
+[data-theme='dark'] span,
+[data-theme='dark'] div {
+  color: #f5f5f5 !important;
 }
 
 html {
