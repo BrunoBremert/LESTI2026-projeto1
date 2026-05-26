@@ -72,7 +72,5 @@ Closes #X
 ```
 
 :::tip
-Se houver mais do que um elemento no grupo, cada pessoa pode fazer commit num
-ramo proprio ou contribuir na mesma pull request com commits assinados pelo seu
-utilizador Git.
+
 :::
