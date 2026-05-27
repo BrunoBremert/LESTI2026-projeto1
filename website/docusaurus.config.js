@@ -7,6 +7,7 @@ const config = {
 
   url: 'https://brunobremert.github.io',
   baseUrl: '/LESTI2026-projeto1/',
+  trailingSlash: false,
   organizationName: 'BrunoBremert',
   projectName: 'LESTI2026-projeto1',
 
