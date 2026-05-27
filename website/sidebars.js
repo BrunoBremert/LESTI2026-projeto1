@@ -5,6 +5,8 @@ const sidebars = {
     'instalacao',
     'git-workflow',
     'markdown-showcase',
+    'tecnologias',
+    'arquitetura'
   ],
 };
 

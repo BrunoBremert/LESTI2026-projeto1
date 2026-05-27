@@ -81,3 +81,17 @@ A validação é feita pela equipa de staff no local do evento.
 Atualmente, não há suporte para cancelamento.
 
 [Veja o repositório no GitHub](https://github.com/brunobremert/LESTI2026-projeto1)
+
+## Tabela de Funcionalidades
+
+| Funcionalidade | Descrição | Estado |
+|---|---|---|
+| Login de utilizadores | Permite autenticação no sistema | ✅ |
+| Criação de eventos | Permite criar novos eventos | ✅ |
+| Listagem de eventos | Mostra todos os eventos disponíveis | ✅ |
+| Compra de bilhetes | Permite comprar bilhetes | ✅ |
+| Check-in | Validação de entrada nos eventos | ✅ |
+| Dashboard | Exibe métricas e estatísticas | ✅ |
+| Armazenamento JSON | Guarda os dados do sistema | ✅ |
+| Banco de dados SQL | Integração futura | ❌ |
+| Interface gráfica | Planeado para futuras versões | ❌ |
