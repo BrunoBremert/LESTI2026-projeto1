@@ -64,3 +64,18 @@ seguranca e limpeza.
 - [x] Luzes preparadas
 - [ ] Equipa de seguranca confirmada
 - [ ] Limpeza pos-evento planeada
+
+
+## Tabela de Funcionalidades
+
+| Funcionalidade | Descrição | Estado |
+|---|---|---|
+| Login de utilizadores | Permite autenticação no sistema | ✅ |
+| Criação de eventos | Permite criar novos eventos | ✅ |
+| Listagem de eventos | Mostra todos os eventos disponíveis | ✅ |
+| Compra de bilhetes | Permite comprar bilhetes | ✅ |
+| Check-in | Validação de entrada nos eventos | ✅ |
+| Dashboard | Exibe métricas e estatísticas | ✅ |
+| Armazenamento JSON | Guarda os dados do sistema | ✅ |
+| Banco de dados SQL | Integração futura | ❌ |
+| Interface gráfica | Planeado para futuras versões | ❌ |
