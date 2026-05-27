@@ -6,6 +6,8 @@ sidebar_position: 2
 
 # Funcionalidades principais
 
+> “A tecnologia move o mundo.” – Steve Jobs
+
 ## Gestao de eventos
 
 Os organizadores podem criar eventos com data, capacidade e preco. A versao
@@ -22,6 +24,10 @@ Cada setor guarda:
 - capacidade;
 - bilhetes vendidos.
 
+:::tip Dica
+Organize os setores para otimizar a venda de bilhetes e a experiência do público.
+:::
+
 ## Compra de bilhetes
 
 O cliente escolhe um evento e confirma a compra. Se houver vagas, o sistema:
@@ -33,6 +39,7 @@ O cliente escolhe um evento e confirma a compra. Se houver vagas, o sistema:
 ```text title="Exemplo de codigo gerado"
 Tech Summit-VIP
 ```
+
 
 ## Validacao pela equipa de staff
 
@@ -64,3 +71,13 @@ seguranca e limpeza.
 - [x] Luzes preparadas
 - [ ] Equipa de seguranca confirmada
 - [ ] Limpeza pos-evento planeada
+
+## FAQ
+
+**Como validar um bilhete?**  
+A validação é feita pela equipa de staff no local do evento.
+
+**Posso cancelar um bilhete?**  
+Atualmente, não há suporte para cancelamento.
+
+[Veja o repositório no GitHub](https://github.com/brunobremert/LESTI2026-projeto1)
